@@ -1,5 +1,6 @@
 extends ../../layout/default.pug
 include ../../mixins/filer-status.pug
+include ../../mixins/search.pug
 block main
   h2 Trang danh sách sản phẩm
 
@@ -10,17 +11,7 @@ block main
         .col-6
           +filer-status(filerStatus) 
         .col-6
-          form#form-search
-            .input-group
-              input.form-control(
-                type="text",
-                name="keyword",
-                value=keyword
-                placeholder="Nhập từ khóa"
-              )
-              .input-group-append
-                button.btn.btn-success(type="submit") Tìm 
-
+          +search (keyword)
   .card.mb-3
     .card-header Danh sách
     .card-body
@@ -54,3 +45,15 @@ block main
               td
                 button.btn.btn-warning.btn-sm Sửa
                 button.btn.btn-danger.btn-sm.ml-1 Xóa
+  nav
+  ul(class="pagination")
+    if(pagination.curentPage>1)
+      li(class="page-item")
+        button(class="page-link" button-pagination=pagination.curentPage-1) Trang trước
+    -for(var i=1;i<=pagination.totalpage;i++)
+      li(class=`page-item ${pagination.curentPage==i ? "active" : ""}`)
+        button(class="page-link" button-pagination=i) #{i}
+
+    if(pagination.curentPage<pagination.totalpage)
+      li(class="page-item")
+        button(class="page-link"  button-pagination=pagination.curentPage+1) Kế tiếp

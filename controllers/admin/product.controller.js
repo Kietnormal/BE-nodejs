@@ -1,6 +1,8 @@
 const Product = require("../../model/product.model");
 const filerStatushelper = require("../../helpers/filerStatus");
-const searchHelper=require("../../helpers/search")
+const searchHelper = require("../../helpers/search");
+const paginationHelper = require("../../helpers/pagination");
+
 module.exports.product = async (req, res) => {
   //bộ lọc
 
@@ -11,15 +13,22 @@ module.exports.product = async (req, res) => {
   if (req.query.status) {
     find.status = req.query.status;
   }
- //tìm kiếm
-const objectSearch=searchHelper(req.query)
-if(objectSearch.regex){
-  find.title=objectSearch.regex
-}
- 
-
-  const product = await Product.find(find);
- 
+  //tìm kiếm
+  const objectSearch = searchHelper(req.query);
+  if (objectSearch.regex) {
+    find.title = objectSearch.regex;
+  }
+  //phân trang
+  const countProduct=await Product.countDocuments(find);
+  let objectPanigation =paginationHelper( {
+    curentPage: 1,
+    limitItem: 4,
+  },req.query,countProduct);
+  
+  const product = await Product.find(find)
+    .limit(objectPanigation.limitItem)
+    .skip(objectPanigation.skip);
+  
   product.forEach((item) => {
     item.pricenew = (
       (item.price * (100 - item.discountPercentage)) /
@@ -33,6 +42,7 @@ if(objectSearch.regex){
     products: product,
     filerStatus: filerStatus,
     keyword: objectSearch.keyword,
+    pagination:objectPanigation
   });
   // res.send("trang sản phẩm")
   // res.send('trang admin')

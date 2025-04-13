@@ -1,0 +1,11 @@
+mixin search(keywork)
+        form#form-search
+            .input-group
+              input.form-control(
+                type="text",
+                name="keyword",
+                value=keyword
+                placeholder="Nhập từ khóa"
+              )
+              .input-group-append
+                button.btn.btn-success(type="submit") Tìm 
