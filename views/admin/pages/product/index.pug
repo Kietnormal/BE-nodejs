@@ -1,0 +1,35 @@
+extends ../../layout/default.pug
+
+block main
+  h2 Trang danh sách sản phẩm
+
+  table.table.table-hover.table-sm
+    thead
+      tr
+        th STT
+        th Hình ảnh
+        th Tiêu đề
+        th Giá
+        th Trạng thái
+        th Hành động
+    tbody
+      each item,index in products
+        tr
+          td #{index+1}
+          td
+            img(
+              src=item.thumbnail
+              alt=item.title
+              width="80px",
+              height="80px"
+            )
+          td #{item.title}
+          td #{item.pricenew}$
+          td
+            if(item.status =="active")
+              a(class="bg-primary text-white " href="#") Hoạt động
+            else
+              a(class="bg-danger text-white " href="#") Dừng Hoạt động
+          td
+            button.btn.btn-warning.btn-sm Sửa
+            button.btn.btn-danger.btn-sm.ml-1 Xóa
